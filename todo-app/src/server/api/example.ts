@@ -3,7 +3,7 @@ import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
-} from "~/server/infrastructure/trpc/trpc";
+} from "~/server/infrastructure/trpc";
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -18,7 +18,8 @@ export const exampleRouter = createTRPCRouter({
     return ctx.prisma.example.findMany();
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
+  getSecretMessage: protectedProcedure.query(({ctx}) => {
+    console.log(ctx.session.user);
     return "you can now see this secret message!";
   }),
 });
