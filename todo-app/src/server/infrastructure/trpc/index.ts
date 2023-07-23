@@ -15,10 +15,9 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => ({
 	prisma,
 });
 
-const createTRPCContext = async (opts: CreateNextContextOptions) => {
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   	const { req, res } = opts;
   	const session = await getServerAuthSession({ req, res });
-	console.log("session", session);
   	return createInnerTRPCContext({session});
 };
 
@@ -40,7 +39,6 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const enforceUserIsAuthed = t.middleware(({ctx, next}) => {
-	console.log('here', ctx)
   	if (!ctx.session?.user) {
     	throw new TRPCError({ code: "UNAUTHORIZED" });
   	}

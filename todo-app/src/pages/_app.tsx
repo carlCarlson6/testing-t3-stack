@@ -13,7 +13,8 @@ const MyApp: AppType<{session: Session | null}> = ({
 	<SessionProvider session={session}>
 		<ChakraProvider>
 			<Box
-				backgroundColor={'gray.500'}
+				p={2}
+				backgroundColor={'gray.800'}
 				minHeight="100vh"
 				textColor={'white'}
 			>

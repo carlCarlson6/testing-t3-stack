@@ -7,7 +7,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => (<>
         <Header />
         <Box
             textColor={'white'}
-            p={'2.5'}
+            p={'5'}
         >
             {children}
         </Box>
@@ -19,10 +19,13 @@ const Header = () => (<>
         p='2'
         minWidth='max-content'
         alignItems='center'
-        gap='2'
-        backgroundColor={'gray.600'}
+        paddingBottom={3}
+        backgroundColor={'gray.900'}
+        border={'1px'}
+        borderRadius={'3xl'}
+        borderColor={'gray.700'}
     >
-        <Heading>
+        <Heading size={'lg'} marginLeft={'1rem'}>
             <Text>T3 TODO APP</Text>
         </Heading>
         <Spacer />
@@ -36,26 +39,27 @@ const UserAvatar = () => {
     const userName = session?.user.name ?? 'not-known-name';
     
     return (<>
-        <Menu>
-            <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}
-            >
-                <Avatar size={"md"} name={userName} src={avatarImage}/>
-            </MenuButton>
-            <MenuList>
-                    <Button
-                        as={MenuItem}
-                        onClick={() => signOut()}
-                        rightIcon={<CloseIcon/>}
-                    >
-                        sign out
-                    </Button>
-                
-            </MenuList>
-        </Menu>
+        <Box marginRight={'0.5rem'}>
+            <Menu>
+                <MenuButton
+                    as={Button}
+                    rounded={'full'}
+                    variant={'link'}
+                    cursor={'pointer'}
+                    minW={0}
+                >
+                    <Avatar size={"md"} name={userName} src={avatarImage}/>
+                </MenuButton>
+                <MenuList>
+                        <Button
+                            as={MenuItem}
+                            onClick={() => signOut()}
+                            rightIcon={<CloseIcon/>}
+                        >
+                            sign out
+                        </Button>
+                </MenuList>
+            </Menu>
+        </Box>
     </>);
 }

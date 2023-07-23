@@ -2,23 +2,17 @@ import { prisma } from "../infrastructure/db/prisma";
 import { protectedProcedure } from "../infrastructure/trpc";
 import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
+import { TaskStatus, TaskTitle } from "./personal-task";
 
 export const createPersonalTaskProcedute = protectedProcedure
     .input(z.object({title: z.string().nonempty()}))
-    .mutation(({ctx, input}) => {
-        console.log(ctx);
-        return createPersonalTask({ userId: ctx.session.user.id, taskTitle: input.title });
-    });
-
-type TaskTitle = string;
-
-type TaskStatus = "TODO" | "WIP" | "DONE";
+    .mutation(({ctx, input}) => createPersonalTask({ userId: ctx.session.user.id, taskTitle: input.title }));
 
 const createPersonalTask = async (command: {userId: string, taskTitle: TaskTitle}) => {
     const newPersonalTask = {
         id: uuidv4(),
         title: command.taskTitle,
-        status: "TODO",
+        status: TaskStatus.TODO,
         notes: [],
         createdOn: new Date(),
         updates: [],
