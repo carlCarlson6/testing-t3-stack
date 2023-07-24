@@ -22,7 +22,7 @@ export const AuthGuard = ({ children }: Props): JSX.Element => {
 
 	if (isLoading) return <AppLoadingSpinner />
 
-	return isAuthenticated ? <Layout>{children}</Layout> : <></>;
+	return isAuthenticated ? <>{children}</> : <></>;
 }
 
 const AppLoadingSpinner = () => (<>

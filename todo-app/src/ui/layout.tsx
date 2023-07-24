@@ -1,6 +1,6 @@
-import { CloseIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-import { useSession , signOut } from "next-auth/react";
+import { useSession , signOut, signIn } from "next-auth/react";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => (<>
     <SimpleGrid>
@@ -50,7 +50,14 @@ const UserAvatar = () => {
                 >
                     <Avatar size={"md"} name={userName} src={avatarImage}/>
                 </MenuButton>
-                <MenuList>
+                <MenuList>{ !session ?
+                        <Button
+                            as={MenuItem}
+                            onClick={() => signIn()}
+                            rightIcon={<CheckIcon/>}
+                        >
+                            sign in
+                        </Button> : 
                         <Button
                             as={MenuItem}
                             onClick={() => signOut()}
@@ -58,7 +65,7 @@ const UserAvatar = () => {
                         >
                             sign out
                         </Button>
-                </MenuList>
+                }</MenuList>
             </Menu>
         </Box>
     </>);

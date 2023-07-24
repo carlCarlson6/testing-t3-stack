@@ -28,12 +28,6 @@ const _Home = () => {
 	</>);
 }
 
-const Home = () => (
-	<AuthGuard>
-		<_Home/>
-	</AuthGuard>
-);
-
 const CreateNewTask = () => {
 	const { mutate: createPersonalTask, isLoading } = api.personalTasks.create.useMutation();
 	const [taskTitle, setTaskTitle] = useState<{value: string, isError: boolean}>({value: '', isError: true});
@@ -69,5 +63,7 @@ const CreateNewTask = () => {
 		</Container>
 	</>);
 }
+
+const Home = () => (<AuthGuard><_Home/></AuthGuard>);
 
 export default Home;

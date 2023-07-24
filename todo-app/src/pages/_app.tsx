@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { AppType } from "next/app";
 import Head from "next/head";
 import { api } from "~/ui/api";
+import { Layout } from "~/ui/layout";
 
 const MyApp: AppType<{session: Session | null}> = ({
   	Component,
@@ -18,7 +19,9 @@ const MyApp: AppType<{session: Session | null}> = ({
 				minHeight="100vh"
 				textColor={'white'}
 			>
-				<Component {...pageProps} />
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
 			</Box>
 		</ChakraProvider>
 	</SessionProvider>

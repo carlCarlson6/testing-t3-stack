@@ -1,4 +1,4 @@
-import { Button, Text, Center, AbsoluteCenter, Box, VStack } from "@chakra-ui/react";
+import { Button, Text, AbsoluteCenter, Box, VStack } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { getSession, signIn } from "next-auth/react";
 
