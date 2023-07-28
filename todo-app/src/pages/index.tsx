@@ -1,25 +1,22 @@
-import { Flex, Container, Divider, FormControl, FormLabel, Input, Spacer, Text, Box, Button, Spinner, List, ListItem } from "@chakra-ui/react";
-import { useState } from "react";
-import { InputChanged } from "../ui/input-changed";
-import { api } from "~/ui/api";
+import { Flex, Text, Box, List, ListItem } from "@chakra-ui/react";
 import { AuthGuard } from "~/ui/auth-guard";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getSession } from "next-auth/react";
+import { PersonalTasksResume, getPersonalTasksList } from "~/server/personal-tasks/get-personal-tasks-list";
+import { prisma } from "~/server/infrastructure/db/prisma";
+import { CreateNewTask } from "~/ui/personal-tasks/create-new-task";
+import { PersonalTasksList } from "~/ui/personal-tasks/personal-tasks-list";
+import { PersonalTasksProvider } from "~/ui/personal-tasks/personal-tasks-state";
 
-const _Home = () => {
-	const { data } = api.personalTasks.getAllList.useQuery();
-	const tasksList = data ?? [];
+type HomeProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const Home = ({tasks}: HomeProps) => {
+	//const { data } = api.personalTasks.getAllList.useQuery();
 
 	return (<>
 		<Flex>
 			<Box>
-				<Text>list of tasks</Text>
-				<List>
-					{ tasksList.map(task => 
-						<ListItem>
-							{task.title}
-						</ListItem>) 
-					}
-				</List>
-				
+				<PersonalTasksList/>
 			</Box>
 			<Box p={5}>
 				<CreateNewTask />
@@ -28,42 +25,19 @@ const _Home = () => {
 	</>);
 }
 
-const CreateNewTask = () => {
-	const { mutate: createPersonalTask, isLoading } = api.personalTasks.create.useMutation();
-	const [taskTitle, setTaskTitle] = useState<{value: string, isError: boolean}>({value: '', isError: true});
-	const handleTaskTitleChange = (e: InputChanged) => setTaskTitle({
-		value: e.target.value,
-		isError: e.target.value.trim().length === 0,
-	});
+export const getServerSideProps: GetServerSideProps<{tasks: PersonalTasksResume}> = async (context) => {
+	const session = await getSession(context)
+	const maybeUserId = session?.user.id;
+	if (!maybeUserId) return { props: { tasks: [] } }
 
-	return (<>
-		<Container>
-			<Text>create new task</Text> 
-			<Divider />
-			<form 
-				onSubmit={(e) => {
-					createPersonalTask({title: taskTitle.value});
-				}}
-			>
-				<FormControl isRequired isInvalid={taskTitle.isError}>
-					<FormLabel>
-						title
-					</FormLabel>
-					<Input 
-						type={'text'}
-						value={taskTitle.value}
-						onChange={handleTaskTitleChange}
-					/>
-				</FormControl>
-				{ isLoading  ?
-					<Spinner /> :
-					<Button type={'submit'}>create</Button>
-				}
-			</form>	
-		</Container>
-	</>);
+	var tasks = await getPersonalTasksList(prisma, maybeUserId);
+	return { props: { tasks } }
 }
 
-const Home = () => (<AuthGuard><_Home/></AuthGuard>);
-
-export default Home;
+export default ({tasks}: HomeProps) => (
+	<AuthGuard>
+		<PersonalTasksProvider tasks={tasks}>
+			<Home tasks={tasks}/>
+		</PersonalTasksProvider>
+	</AuthGuard>
+);
