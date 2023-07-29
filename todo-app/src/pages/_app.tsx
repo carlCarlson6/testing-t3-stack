@@ -1,7 +1,7 @@
 import { Box, ChakraProvider } from "@chakra-ui/react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { AppType } from "next/app";
+import type { AppType } from "next/app";
 import Head from "next/head";
 import { api } from "~/ui/api";
 import { Layout } from "~/ui/layout";

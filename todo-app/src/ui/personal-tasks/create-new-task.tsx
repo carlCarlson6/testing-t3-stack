@@ -1,7 +1,7 @@
 import { api } from "../api";
 import { Box, Button, FormControl, FormErrorMessage, Heading, Input, InputGroup, InputLeftAddon, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text } from "@chakra-ui/react";
-import { HandleTaskTitleChange, NewTaskInput, usePersonalTasks } from "./personal-tasks-state";
-import { TaskTitle } from "~/server/personal-tasks/personal-task";
+import { type HandleTaskTitleChange, type NewTaskInput, usePersonalTasks } from "./personal-tasks-state";
+import type { TaskTitle } from "~/server/personal-tasks/personal-task";
 
 export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) => {
 	const { handleOnCreate, newTaskInput, handleTaskTitleChange, isCreating } = useCreateNewTask(onClose);
@@ -35,7 +35,7 @@ export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose:
 	</>);
 };
 
-type CreateNewTaskProps = { handleOnCreate: HandleOnCreate, newTaskInput: NewTaskInput, handleTaskTitleChange: HandleTaskTitleChange };
+interface CreateNewTaskProps { handleOnCreate: HandleOnCreate, newTaskInput: NewTaskInput, handleTaskTitleChange: HandleTaskTitleChange };
 
 const CreateNewTask = ({handleOnCreate, newTaskInput, handleTaskTitleChange}: CreateNewTaskProps) => (<>
 	<Box>
@@ -50,7 +50,7 @@ const CreateNewTask = ({handleOnCreate, newTaskInput, handleTaskTitleChange}: Cr
 				isInvalid={newTaskInput.isError}
 			>
 				<InputGroup>
-					<InputLeftAddon children={'title'} />
+					<InputLeftAddon><p>title</p></InputLeftAddon>
 					<Input
 						textColor={'white'}
 						type={'text'}

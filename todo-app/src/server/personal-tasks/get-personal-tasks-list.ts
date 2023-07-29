@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { protectedProcedure } from "../infrastructure/trpc";
-import { PersonalTask, PersonalTasksResume } from "./personal-task";
+import type { PersonalTask, PersonalTasksResume } from "./personal-task";
 
 export const getPersonalTasksListProcedure = protectedProcedure
     .query(({ctx}) => getPersonalTasksList(ctx.prisma, ctx.session.user.id));
 
 export const getPersonalTasksList = async (db: PrismaClient, userId: string): Promise<PersonalTasksResume> => {
-    var maybeTasks = await queryAllPersonalTasks(db, userId);
+    const maybeTasks = await queryAllPersonalTasks(db, userId);
     return mapToAllPersonalTasksList(maybeTasks)
 };
 

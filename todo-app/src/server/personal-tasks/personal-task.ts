@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 export type TaskTitle = string;
 
@@ -8,7 +8,7 @@ export const enum TaskStatus {
     DONE    =   "DONE"
 }
 
-export type PersonalTask = {
+export interface PersonalTask {
     id: PersonalTaskId;
     title: TaskTitle;
     status: string;
@@ -20,7 +20,7 @@ export type PersonalTask = {
 
 export type PersonalTaskId = string;
 
-export type PersonalTaskResume = {
+export interface PersonalTaskResume {
     id: string;
     title: string;
     status: string;

@@ -1,5 +1,5 @@
-import { Button, Text, AbsoluteCenter, Box, VStack, Icon } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
+import { Button, Text, AbsoluteCenter, Box, VStack } from "@chakra-ui/react";
+import type { GetServerSideProps } from "next";
 import { getSession, signIn } from "next-auth/react";
 import { DiscordIcon } from "~/ui/layout";
 
@@ -14,7 +14,7 @@ const SignIn =() => (<>
 				</Box>
 				<Box>
 					<Button
-						onClick={() => signIn()}
+						onClick={() => {signIn().catch(_ => {return;});}}
 						rightIcon={<DiscordIcon />}
 						_hover={{
 							bg: 'gray.400'

@@ -1,13 +1,13 @@
-import { PropsWithChildren, createContext, useContext, useRef } from "react";
+import { type PropsWithChildren, createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
-import { PersonalTaskId, PersonalTaskResume, PersonalTasksResume, TaskTitle } from "~/server/personal-tasks/personal-task";
-import { InputChanged } from "../input-changed";
+import type { PersonalTaskId, PersonalTaskResume, PersonalTasksResume, TaskTitle } from "~/server/personal-tasks/personal-task";
+import type { InputChanged } from "../input-changed";
 
 interface PersonalTasksProps {
     tasks: PersonalTasksResume;
 }
 
-export type NewTaskInput = { value: TaskTitle, isError: boolean };
+export interface NewTaskInput { value: TaskTitle, isError: boolean };
 export type HandleTaskTitleChange = (e: InputChanged) => void;
 
 interface PersonalTasksState extends PersonalTasksProps {

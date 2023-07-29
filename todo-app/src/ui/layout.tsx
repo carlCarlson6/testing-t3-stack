@@ -1,4 +1,4 @@
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, Avatar, Menu, MenuButton, MenuList, MenuItem, Icon } from "@chakra-ui/react";
 import { useSession , signOut, signIn } from "next-auth/react";
 import { FaDiscord } from "react-icons/fa";
@@ -59,7 +59,7 @@ const UserAvatar = () => {
                             backgroundColor={'gray.700'}
                             _hover={{ bg: 'gray.600' }}
                             as={MenuItem}
-                            onClick={() => signIn()}
+                            onClick={() => {signIn().catch(_ => {return;})}}
                             rightIcon={<DiscordIcon/>}
                             textColor={'white'}
                         >
@@ -69,7 +69,7 @@ const UserAvatar = () => {
                             backgroundColor={'gray.700'}
                             _hover={{ bg: 'gray.600' }}
                             as={MenuItem}
-                            onClick={() => signOut()}
+                            onClick={() => {signOut().catch(_ => {return;})}}
                             rightIcon={<CloseIcon/>}
                             textColor={'white'}
                         >

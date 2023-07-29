@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { protectedProcedure } from "../infrastructure/trpc";
 import { z } from "zod";
-import { PersonalTaskId } from "./personal-task";
+import type { PersonalTaskId } from "./personal-task";
 
 export const getPersonalTaskProcedure = protectedProcedure
     .input(z.object({taskId: z.string().nonempty()}))

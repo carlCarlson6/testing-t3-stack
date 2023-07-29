@@ -2,7 +2,7 @@ import { prisma } from "../infrastructure/db/prisma";
 import { protectedProcedure } from "../infrastructure/trpc";
 import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
-import { TaskStatus, TaskTitle } from "./personal-task";
+import { TaskStatus, type TaskTitle } from "./personal-task";
 
 export const createPersonalTaskProcedute = protectedProcedure
     .input(z.object({title: z.string().nonempty()}))

@@ -1,4 +1,4 @@
-import { Text, List, ListItem, Divider, Box, border, HStack, Button, useDisclosure, Modal, ModalOverlay, ModalContent, chakra } from "@chakra-ui/react";
+import { Text, List, ListItem, Divider, Box, HStack, Button, useDisclosure } from "@chakra-ui/react";
 import { usePersonalTasks } from "./personal-tasks-state";
 import { CreateNewTaskModal } from "./create-new-task";
 
@@ -16,7 +16,8 @@ export const PersonalTasksList = () => {
             <Divider marginTop={1} marginBottom={3} />
             <List margin={1}>
                 {tasks.map(task =>
-                    <ListItem 
+                    <ListItem
+                        key={task.id} 
                         padding={'0.33rem'}
                         onClick={() => selectTask(task.id)}
                         _hover={{ 
