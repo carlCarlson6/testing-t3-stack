@@ -5,6 +5,7 @@ import type { TaskTitle } from "~/server/personal-tasks/personal-task";
 
 export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) => {
 	const { handleOnCreate, newTaskInput, handleTaskTitleChange, isCreating } = useCreateNewTask(onClose);
+	console.log(newTaskInput);
 	return (<>
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -27,6 +28,7 @@ export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose:
 					<Button 
 						type={'submit'}
 						isDisabled={newTaskInput.isError}
+						onClick={() => handleOnCreate(newTaskInput.value)}
 					>create</Button>
 				}
 				</ModalFooter>
@@ -39,12 +41,7 @@ interface CreateNewTaskProps { handleOnCreate: HandleOnCreate, newTaskInput: New
 
 const CreateNewTask = ({handleOnCreate, newTaskInput, handleTaskTitleChange}: CreateNewTaskProps) => (<>
 	<Box>
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-				handleOnCreate(newTaskInput.value);
-			} }
-		>
+		<form>
 			<FormControl
 				isRequired
 				isInvalid={newTaskInput.isError}
@@ -75,11 +72,13 @@ const useCreateNewTask = (closeModal: () => void) => {
 		newTaskInput: s.newTaskInput, 
 		resetNewTaskInput: s.resetNewTaskInput
 	}));
-	const handleOnCreate = (title: TaskTitle) => mutate({title}, {onSuccess: (response) => {
-		addTasks(response);
-		resetNewTaskInput();
-		closeModal();
-	}});
+	const handleOnCreate = (title: TaskTitle) => mutate({ title }, {
+		onSuccess: (response) => {
+			addTasks(response);
+			resetNewTaskInput();
+			closeModal();
+		}
+	});
 
 	return {
 		handleOnCreate, 

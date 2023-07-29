@@ -21,7 +21,7 @@ interface PersonalTasksState extends PersonalTasksProps {
 
 const DEFAULT_PROPS = {
     tasks: [],
-    newTaskInput: { value: "", isError: false },
+    newTaskInput: { value: "", isError: true },
     selectedTask: null,
 }
 
