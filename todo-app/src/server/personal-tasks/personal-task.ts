@@ -28,4 +28,8 @@ export interface PersonalTaskResume {
     status: string;
 }
 
-export type PersonalTasksResume = PersonalTaskResume[];
+export interface PersonalTasksResume {
+    todoTasks: PersonalTaskResume[],
+    wipTasks:  PersonalTaskResume[],
+    doneTasks: PersonalTaskResume[],
+}

@@ -1,7 +1,7 @@
 import { api } from "../api";
-import { usePersonalTasks } from "./personal-tasks-state";
 import { Box, Radio, RadioGroup, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
 import { type PersonalTaskId, TaskStatus, stringToTaskStatus } from "~/server/personal-tasks/personal-task";
+import { usePersonalTasks } from "./state/use-personal-tasks";
 
 export const TaskDetailView = () => {
     const {task, isDataLoading} = useTaskDetail();
@@ -53,16 +53,20 @@ const Status = ({statusValue, taskId}: {statusValue: string, taskId: PersonalTas
 }
 
 const useSatus = (taskId: PersonalTaskId) => {
-    const { refetch } = api.personalTasks.get.useQuery({taskId});
-    const { mutate, isLoading } = api.personalTasks.updateStatus.useMutation();
+    const { refetch, isRefetching } = api.personalTasks.get.useQuery({taskId});
+    const { mutate, isLoading: isLoadingMuation } = api.personalTasks.updateStatus.useMutation();
+    const { refetch: refetchAll, isRefetching: isRefetchingAll } = api.personalTasks.getAllList.useQuery();
 
     const onUpdateStatus = (newStatus: TaskStatus) => mutate(
         {taskId, newStatus}, 
-        { onSuccess: _ => {refetch().catch(_ => {return;})} }
+        { onSuccess: _ => {
+            Promise.all([refetchAll(),refetch()])
+                .catch(_ => {return;});
+        }}
     );
 
     return {
-        isUpdatingSattus: isLoading,
+        isUpdatingSattus: isRefetching || isLoadingMuation || isRefetchingAll,
         onUpdateStatus
     };
 }

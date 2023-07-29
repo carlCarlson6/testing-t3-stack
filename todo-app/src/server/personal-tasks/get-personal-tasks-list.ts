@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { protectedProcedure } from "../infrastructure/trpc";
-import type { PersonalTasksResume } from "./personal-task";
+import { stringToTaskStatus, type PersonalTasksResume, TaskStatus } from "./personal-task";
 
 export const getPersonalTasksListProcedure = protectedProcedure
     .query(({ctx}) => getPersonalTasksList(ctx.prisma, ctx.session.user.id));
@@ -24,9 +24,15 @@ const queryAllPersonalTasks = (db: PrismaClient, userId: string) => db.personalT
         }
     });
 
-const mapToAllPersonalTasksList = (maybeTasks: { id: string; title: string; status: string; createdOn: Date;}[]) => (maybeTasks ?? [])
-    .map(task => ({
+const mapToAllPersonalTasksList = (maybeTasks: { id: string; title: string; status: string; createdOn: Date;}[]) => {
+    const allTasks = (maybeTasks ?? []).map(task => ({
         id: task.id,
         title: task.title,
-        status: task.status,
+        status: stringToTaskStatus(task.status),
     }));
+    return {
+        todoTasks: allTasks.filter(t => t.status === TaskStatus.TODO),
+        wipTasks:  allTasks.filter(t => t.status === TaskStatus.WIP),
+        doneTasks: allTasks.filter(t => t.status === TaskStatus.DONE),
+    }
+};

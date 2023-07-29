@@ -5,9 +5,9 @@ import { getSession } from "next-auth/react";
 import { getPersonalTasksList } from "~/server/personal-tasks/get-personal-tasks-list";
 import { prisma } from "~/server/infrastructure/db/prisma";
 import { PersonalTasksList } from "~/ui/personal-tasks/personal-tasks-list";
-import { PersonalTasksProvider } from "~/ui/personal-tasks/personal-tasks-state";
 import type { PersonalTasksResume } from "~/server/personal-tasks/personal-task";
 import { TaskDetailView } from "~/ui/personal-tasks/task-detail-view";
+import { PersonalTasksProvider } from "~/ui/personal-tasks/state/use-personal-tasks";
 
 const _Home = () => (<>
 	<Flex>
@@ -23,7 +23,7 @@ const _Home = () => (<>
 export const getServerSideProps: GetServerSideProps<{tasks: PersonalTasksResume}> = async (context) => {
 	const session = await getSession(context)
 	const maybeUserId = session?.user.id;
-	if (!maybeUserId) return { props: { tasks: [] } }
+	if (!maybeUserId) return { props: { tasks: { todoTasks: [], wipTasks: [], doneTasks: [] } } }
 
 	const tasks = await getPersonalTasksList(prisma, maybeUserId);
 	return { props: { tasks } }

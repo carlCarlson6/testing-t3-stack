@@ -1,7 +1,8 @@
 import { api } from "../api";
 import { Box, Button, FormControl, FormErrorMessage, Heading, Input, InputGroup, InputLeftAddon, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text } from "@chakra-ui/react";
-import { type HandleTaskTitleChange, type NewTaskInput, usePersonalTasks } from "./personal-tasks-state";
+import { type HandleTaskTitleChange, type NewTaskInput } from "./state/personal-tasks-state";
 import type { TaskTitle } from "~/server/personal-tasks/personal-task";
+import { usePersonalTasks } from "./state/use-personal-tasks";
 
 export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) => {
 	const { handleOnCreate, newTaskInput, handleTaskTitleChange, isCreating } = useCreateNewTask(onClose);
