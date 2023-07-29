@@ -1,4 +1,4 @@
-import { List, ListItem, Divider, Box, Button, useDisclosure, Heading } from "@chakra-ui/react";
+import { List, ListItem, Divider, Box, Button, useDisclosure, Heading, Text } from "@chakra-ui/react";
 import { CreateNewTaskModal } from "./create-new-task";
 import type { PersonalTaskResume } from "~/server/personal-tasks/personal-task";
 import { usePersonalTasks } from "./state/use-personal-tasks";
@@ -9,20 +9,27 @@ export const PersonalTasksList = () => {
     const {tasks} = usePersonalTaskList();
     return (<>
         <Box paddingRight={5}>
-            <Button onClick={() => onOpen()}>new task</Button>
-            <Divider marginTop={3} marginBottom={4} />
+            <Button 
+                onClick={() => onOpen()}
+                size={'sm'}
+            >
+                new task
+            </Button>
+            
+            <Divider marginTop={2} marginBottom={4} />
             
             <Heading size={'sm'} >TODO</Heading>
             <TaskList tasks={tasks.todoTasks}/>
-            <Divider marginTop={1} marginBottom={4} />
+            
+            <Divider marginTop={2} marginBottom={4} />
 
             <Heading size={'sm'} >WIP</Heading>
             <TaskList tasks={tasks.wipTasks}/>
-            <Divider marginTop={1} marginBottom={4} />
+            
+            <Divider marginTop={2} marginBottom={4} />
 
             <Heading size={'sm'} >DONE</Heading>
             <TaskList tasks={tasks.doneTasks}/>
-            <Divider marginTop={1} marginBottom={4} />
         </Box>
 
         <CreateNewTaskModal isOpen={isOpen} onClose={onClose} />
@@ -40,8 +47,14 @@ const usePersonalTaskList = () => {
 const TaskList = ({tasks}: {tasks: PersonalTaskResume[]}) => {
     const {selectTask} = usePersonalTasks((s) => ({selectTask: s.selectTask}));
     return (<>
-        <List margin={1}>
-            {tasks.map(task =>
+        <List margin={1}>{
+            tasks.length === 0 ?
+            (
+                <Text fontSize={'xs'} fontStyle={'italic'}>
+                    no tasks
+                </Text>
+            ) :
+            (tasks.map(task =>
                 <ListItem
                     key={task.id} 
                     padding={'0.33rem'}
@@ -55,7 +68,7 @@ const TaskList = ({tasks}: {tasks: PersonalTaskResume[]}) => {
                 >
                     {task.title}
                 </ListItem>
-            )}
-        </List>
+            ))
+        }</List>
     </>);
 }

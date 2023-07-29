@@ -6,7 +6,6 @@ import { usePersonalTasks } from "./state/use-personal-tasks";
 
 export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) => {
 	const { handleOnCreate, newTaskInput, handleTaskTitleChange, isCreating } = useCreateNewTask(onClose);
-	console.log(newTaskInput);
 	return (<>
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -67,6 +66,7 @@ type HandleOnCreate = (title: TaskTitle) => void;
 
 const useCreateNewTask = (closeModal: () => void) => {
 	const { mutate, isLoading: isCreating } = api.personalTasks.create.useMutation();
+	const { refetch } = api.personalTasks.getAllList.useQuery();
 	const { addTasks, resetNewTaskInput, newTaskInput, handleTaskTitleChange, } = usePersonalTasks((s) => ({
 		addTasks: s.add, 
 		handleTaskTitleChange: s.handleTaskTitleChange, 
@@ -75,6 +75,7 @@ const useCreateNewTask = (closeModal: () => void) => {
 	}));
 	const handleOnCreate = (title: TaskTitle) => mutate({ title }, {
 		onSuccess: (response) => {
+			refetch()
 			addTasks(response);
 			resetNewTaskInput();
 			closeModal();

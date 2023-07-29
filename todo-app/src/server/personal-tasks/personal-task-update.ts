@@ -12,6 +12,12 @@ export interface StatusUpdate {
     on: Date;
 }
 
+export interface DeletedPersonalTaskUpdate {
+    type: "DELETED_TASK",
+    taskId: PersonalTaskId,
+    on: Date,
+}
+
 interface UnknownUpdate {
     type: "UNKNOWN_UPDATE"
 }

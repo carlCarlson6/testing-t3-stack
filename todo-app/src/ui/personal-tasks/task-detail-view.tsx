@@ -10,7 +10,7 @@ export const TaskDetailView = () => {
         {isDataLoading ?
             <Spinner /> :
             (!task) ?
-                <>null</> :
+                <></> :
                 <>
                     <SimpleGrid columns={2}>
                         <Box>title</Box>
@@ -54,10 +54,10 @@ const Status = ({statusValue, taskId}: {statusValue: string, taskId: PersonalTas
 
 const useSatus = (taskId: PersonalTaskId) => {
     const { refetch, isRefetching } = api.personalTasks.get.useQuery({taskId});
-    const { mutate, isLoading: isLoadingMuation } = api.personalTasks.updateStatus.useMutation();
+    const { mutate: mutateUpdateStatus, isLoading: isLoadingMuation } = api.personalTasks.updateStatus.useMutation();
     const { refetch: refetchAll, isRefetching: isRefetchingAll } = api.personalTasks.getAllList.useQuery();
 
-    const onUpdateStatus = (newStatus: TaskStatus) => mutate(
+    const onUpdateStatus = (newStatus: TaskStatus) => mutateUpdateStatus(
         {taskId, newStatus}, 
         { onSuccess: _ => {
             Promise.all([refetchAll(),refetch()])
@@ -65,8 +65,10 @@ const useSatus = (taskId: PersonalTaskId) => {
         }}
     );
 
+    console.log("isRefetching", isRefetching, "isLoadingMuation", isLoadingMuation, "isRefetchingAll", isRefetchingAll);
+
     return {
-        isUpdatingSattus: isRefetching || isLoadingMuation || isRefetchingAll,
+        isUpdatingSattus: isLoadingMuation || (isRefetching && isRefetchingAll),
         onUpdateStatus
     };
 }
