@@ -3,9 +3,9 @@ import type { Prisma } from "@prisma/client";
 export type TaskTitle = string;
 
 export enum TaskStatus {
-    TODO    =   "TODO",
-    WIP     =   "WIP",
-    DONE    =   "DONE"
+    TODO = "TODO",
+    WIP  = "WIP",
+    DONE = "DONE"
 }
 
 export const stringToTaskStatus = (str: string) => TaskStatus[str as keyof typeof TaskStatus];

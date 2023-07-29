@@ -1,10 +1,10 @@
-import { protectedProcedure } from "../infrastructure/trpc";
+import { protectedProcedure } from "../../infrastructure/trpc";
 import { z } from "zod";
-import { type PersonalTaskId, TaskStatus, stringToTaskStatus } from "./personal-task";
-import type { StatusUpdate } from "./personal-task-update";
+import { type PersonalTaskId, TaskStatus, stringToTaskStatus } from "../personal-task";
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
-import { type QueryPersonalTask, queryPersonalTask } from "./get-personal-task";
+import { type QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
 import { TRPCError } from "@trpc/server";
+import { StatusUpdated } from "./status-updated";
 
 const updatePersonalTaskStatusInput = z.object({
     taskId: z.string().nonempty(),
@@ -24,7 +24,7 @@ export const updatePersonalTaskStatusProcedure = protectedProcedure
     }));
 
 const updatePersonalTaskStatus = async ({query, command, storeStatusUpdate}: {
-    command: {userId: string, taskId: PersonalTaskId, newStatus: TaskStatus},
+    command: { userId: string, taskId: PersonalTaskId, newStatus: TaskStatus },
     query: QueryPersonalTask, 
     storeStatusUpdate: StorePersonalTaskStatusUpdate,
 }) => {
@@ -35,7 +35,7 @@ const updatePersonalTaskStatus = async ({query, command, storeStatusUpdate}: {
         input: {userId: command.userId, newStatus: command.newStatus}
     });
     
-    const update: StatusUpdate = {
+    const update: StatusUpdated = {
         type: "STATUS_UPDATED",
         taskId: validatedTask.id,
         previus: stringToTaskStatus(validatedTask.status),
@@ -55,7 +55,7 @@ const validateInput = ({task, input}: {task: PersonalTask|null|undefined, input:
 }
 
 type StorePersonalTaskStatusUpdate = ReturnType<typeof storePersonalTaskStatusUpdate>;
-const storePersonalTaskStatusUpdate = (db: PrismaClient) => async (update: StatusUpdate, previousUpdates: Prisma.JsonValue[]) => 
+const storePersonalTaskStatusUpdate = (db: PrismaClient) => async (update: StatusUpdated, previousUpdates: Prisma.JsonValue[]) => 
     await db.personalTask.update({
         where: { id: update.taskId },
         data: {

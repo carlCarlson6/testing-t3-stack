@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { protectedProcedure } from "../infrastructure/trpc";
+import { protectedProcedure } from "../../infrastructure/trpc";
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
-import { type QueryPersonalTask, queryPersonalTask } from "./get-personal-task";
+import { type QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
 import { TRPCError } from "@trpc/server";
-import type { DeletedPersonalTaskUpdate } from "./personal-task-update";
-import type { PersonalTaskId } from "./personal-task";
+import type { DeletedPersonalTask } from "./deleted-personal-task";
+import type { PersonalTaskId } from "../personal-task";
 
 export const deleteTaskProcedure = protectedProcedure
     .input(z.object({ taskId: z.string().nonempty() }))
@@ -25,7 +25,7 @@ const deleteTask = async ({command, delitionDbOperation, queryPersonalTask}: {
     const fetchedTask = await queryPersonalTask(command.taskId);
     const task = validateInputOperation({task: fetchedTask, userId: command.userId});
 
-    const update: DeletedPersonalTaskUpdate = {
+    const update: DeletedPersonalTask = {
         type: "DELETED_TASK",
         taskId: command.taskId,
         on: new Date(),
@@ -35,7 +35,7 @@ const deleteTask = async ({command, delitionDbOperation, queryPersonalTask}: {
 }
 
 type ExecuteDbTaskDelition = ReturnType<typeof executeDbTaskDelition>;
-const executeDbTaskDelition = (db: PrismaClient) => (task: PersonalTask, update: DeletedPersonalTaskUpdate) => db.$transaction([
+const executeDbTaskDelition = (db: PrismaClient) => (task: PersonalTask, update: DeletedPersonalTask) => db.$transaction([
     db.personalTask.delete({ where: { id: task.id } }),
     db.deletedPersonalTask.create({
         data: {
@@ -47,10 +47,10 @@ const executeDbTaskDelition = (db: PrismaClient) => (task: PersonalTask, update:
             userId: task.userId,
             updates: [...task.updates, update] as Prisma.InputJsonValue[],
         }
-    })
+    }),
 ]);
 
-const validateInputOperation = ({task, userId}: {task: PersonalTask|null|undefined, userId: string}) => {
+export const validateInputOperation = ({task, userId}: {task: PersonalTask|null|undefined, userId: string}) => {
     if (!task)                  throw new TRPCError({ message: "task-not-found", code: "NOT_FOUND" });
     if (task.userId !== userId) throw new TRPCError({ message: "not-the-owner",  code: "FORBIDDEN"   });
     return task;

@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
-import { protectedProcedure } from "../infrastructure/trpc";
-import { stringToTaskStatus, type PersonalTasksResume, TaskStatus } from "./personal-task";
+import { protectedProcedure } from "../../infrastructure/trpc";
+import { stringToTaskStatus, type PersonalTasksResume, TaskStatus } from "../personal-task";
 
 export const getPersonalTasksListProcedure = protectedProcedure
     .query(({ctx}) => getPersonalTasksList(ctx.prisma, ctx.session.user.id));

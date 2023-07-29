@@ -2,7 +2,7 @@ import { Flex, Box } from "@chakra-ui/react";
 import { AuthGuard } from "~/ui/auth-guard";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession } from "next-auth/react";
-import { getPersonalTasksList } from "~/server/personal-tasks/get-personal-tasks-list";
+import { getPersonalTasksList } from "~/server/personal-tasks/read/get-personal-tasks-list";
 import { prisma } from "~/server/infrastructure/db/prisma";
 import { PersonalTasksList } from "~/ui/personal-tasks/personal-tasks-list";
 import type { PersonalTasksResume } from "~/server/personal-tasks/personal-task";
