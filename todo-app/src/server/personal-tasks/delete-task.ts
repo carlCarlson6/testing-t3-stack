@@ -1,11 +1,10 @@
 import { z } from "zod";
 import { protectedProcedure } from "../infrastructure/trpc";
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
-import { QueryPersonalTask, queryPersonalTask } from "./get-personal-task";
+import { type QueryPersonalTask, queryPersonalTask } from "./get-personal-task";
 import { TRPCError } from "@trpc/server";
-import { DeletedPersonalTaskUpdate } from "./personal-task-update";
-import { prisma } from "../infrastructure/db/prisma";
-import { PersonalTaskId } from "./personal-task";
+import type { DeletedPersonalTaskUpdate } from "./personal-task-update";
+import type { PersonalTaskId } from "./personal-task";
 
 export const deleteTaskProcedure = protectedProcedure
     .input(z.object({ taskId: z.string().nonempty() }))

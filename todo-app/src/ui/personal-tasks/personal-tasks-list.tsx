@@ -6,7 +6,7 @@ import { api } from "../api";
 
 export const PersonalTasksList = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const {tasks} = usePersonalTaskList();
+    const { tasks } = usePersonalTaskList();
     return (<>
         <Box paddingRight={5}>
             <Button 

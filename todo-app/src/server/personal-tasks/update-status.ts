@@ -3,7 +3,7 @@ import { z } from "zod";
 import { type PersonalTaskId, TaskStatus, stringToTaskStatus } from "./personal-task";
 import type { StatusUpdate } from "./personal-task-update";
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
-import { QueryPersonalTask, queryPersonalTask } from "./get-personal-task";
+import { type QueryPersonalTask, queryPersonalTask } from "./get-personal-task";
 import { TRPCError } from "@trpc/server";
 
 const updatePersonalTaskStatusInput = z.object({
