@@ -29,6 +29,7 @@ const updatePersonalTaskStatus = async ({query, command, storeStatusUpdate}: {
     storeStatusUpdate: StorePersonalTaskStatusUpdate,
 }) => {
     const fetchedTask = await query(command.taskId);
+
     const validatedTask = validateInput({
         task: fetchedTask,
         input: {userId: command.userId, newStatus: command.newStatus}
@@ -41,8 +42,8 @@ const updatePersonalTaskStatus = async ({query, command, storeStatusUpdate}: {
         new: command.newStatus,
         on: new Date(),
     };
-    
-    return await storeStatusUpdate(update, validatedTask.notes);
+
+    return await storeStatusUpdate(update, validatedTask.updates);
 }
 
 const validateInput = ({task, input}: {task: PersonalTask|null|undefined, input: {userId: string, newStatus: TaskStatus}}) => {
@@ -56,9 +57,9 @@ const validateInput = ({task, input}: {task: PersonalTask|null|undefined, input:
 type StorePersonalTaskStatusUpdate = ReturnType<typeof storePersonalTaskStatusUpdate>;
 const storePersonalTaskStatusUpdate = (db: PrismaClient) => async (update: StatusUpdate, previousUpdates: Prisma.JsonValue[]) => 
     await db.personalTask.update({
-    where: { id: update.taskId },
-    data: {
-        status: update.new,
-        updates: [...previousUpdates, update] as Prisma.InputJsonValue[]
-    }
-});
+        where: { id: update.taskId },
+        data: {
+            status: update.new,
+            updates: [...previousUpdates, update] as Prisma.InputJsonValue[]
+        }
+    });

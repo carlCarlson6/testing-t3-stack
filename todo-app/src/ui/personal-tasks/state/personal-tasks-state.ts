@@ -15,7 +15,7 @@ export interface PersonalTasksState extends PersonalTasksProps {
     handleTaskTitleChange: HandleTaskTitleChange,
     resetNewTaskInput: () => void
     selectedTask: PersonalTaskId | null,
-    selectTask: (id: PersonalTaskId) => void,
+    selectTask: (id: PersonalTaskId|null) => void,
     handleUpdateTaskStatus: (task: PersonalTaskResume) => void,
 }
 

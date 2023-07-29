@@ -1,10 +1,10 @@
 import { api } from "../api";
-import { Box, Radio, RadioGroup, SimpleGrid, Spinner, Stack } from "@chakra-ui/react";
+import { Box, Button, Radio, RadioGroup, SimpleGrid, Spinner, Stack, Text } from "@chakra-ui/react";
 import { type PersonalTaskId, TaskStatus, stringToTaskStatus } from "~/server/personal-tasks/personal-task";
 import { usePersonalTasks } from "./state/use-personal-tasks";
 
 export const TaskDetailView = () => {
-    const {task, isDataLoading} = useTaskDetail();
+    const { task, isDataLoading, isDeleting, onDeleteTask } = useTaskDetail();
 
     return (<>
         {isDataLoading ?
@@ -22,17 +22,35 @@ export const TaskDetailView = () => {
                         <Box>created on</Box>
                         <Box>{task.createdOn.toDateString()}</Box>
                     </SimpleGrid>
+                    <Box paddingTop={'1rem'}>
+                        <Button size={'sm'} onClick={_ => onDeleteTask(task.id)} >{ isDeleting ?
+                            <Spinner /> :
+                            <Text>delete</Text>
+                        }</Button>
+                    </Box>
                 </>
         }
     </>);
 }
 
 const useTaskDetail = () => {
-    const {selectedTask, } = usePersonalTasks((s) => ({selectedTask: s.selectedTask,}));
+    const { selectedTask, selectTask } = usePersonalTasks((s) => ({selectedTask: s.selectedTask, selectTask: s.selectTask }));
     const { data, isLoading: isDataLoading } = api.personalTasks.get.useQuery({taskId: selectedTask!}, {enabled: !!selectedTask});
+    const { isLoading: isDeleting, mutate: deleteMutation } = api.personalTasks.delete.useMutation();
+    const { refetch } = api.personalTasks.getAllList.useQuery();
+
+    const onDeleteTask = (taskId: PersonalTaskId) => deleteMutation({taskId}, {
+        onSuccess: () => {
+            selectTask(null);
+            refetch().catch(_ => {return;});
+        }
+    })
+
     return {
         task: data,
-        isDataLoading: isDataLoading && !!selectedTask
+        isDataLoading: isDataLoading && !!selectedTask,
+        isDeleting,
+        onDeleteTask,
     }
 }
 
@@ -64,8 +82,6 @@ const useSatus = (taskId: PersonalTaskId) => {
                 .catch(_ => {return;});
         }}
     );
-
-    console.log("isRefetching", isRefetching, "isLoadingMuation", isLoadingMuation, "isRefetchingAll", isRefetchingAll);
 
     return {
         isUpdatingSattus: isLoadingMuation || (isRefetching && isRefetchingAll),
