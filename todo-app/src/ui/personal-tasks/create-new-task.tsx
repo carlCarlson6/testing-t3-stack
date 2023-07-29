@@ -1,44 +1,91 @@
 import { api } from "../api";
-import { Button, Container, Divider, FormControl, FormLabel, Input, Spinner, Text } from "@chakra-ui/react";
-import { usePersonalTasks } from "./personal-tasks-state";
+import { Box, Button, FormControl, FormErrorMessage, Heading, Input, InputGroup, InputLeftAddon, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text } from "@chakra-ui/react";
+import { HandleTaskTitleChange, NewTaskInput, usePersonalTasks } from "./personal-tasks-state";
 import { TaskTitle } from "~/server/personal-tasks/personal-task";
 
-export const CreateNewTask = () => {
-	const { mutate, isLoading: isCreating } = api.personalTasks.create.useMutation();
-	const use = usePersonalTasks((s) => ({addTasks: s.add, handleTaskTitleChange: s.handleTaskTitleChange, newTaskInput: s.newTaskInput, resetNewTaskInput: s.resetNewTaskInput}));
-	const handleOnCreate = (title: TaskTitle) => mutate(
-			{ title },
-			{ onSuccess: (response) => {
-				use.addTasks(response);
-				use.resetNewTaskInput();
-			}}
-		);
-		
+export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) => {
+	const { handleOnCreate, newTaskInput, handleTaskTitleChange, isCreating } = useCreateNewTask(onClose);
 	return (<>
-		<Container>
-			<Text>create new task</Text> 
-			<Divider />
-			<form 
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleOnCreate(use.newTaskInput.value)
-				}}
-			>
-				<FormControl isRequired isInvalid={use.newTaskInput.isError}>
-					<FormLabel>
-						title
-					</FormLabel>
-					<Input 
-						type={'text'}
-						value={use.newTaskInput.value}
-						onChange={use.handleTaskTitleChange}
+		<Modal isOpen={isOpen} onClose={onClose}>
+			<ModalOverlay />
+			<ModalContent backgroundColor={'gray.700'}>
+				<ModalHeader>
+					<Heading size={"md"}>
+						<Text color={'white'}>create new task</Text>
+					</Heading>
+				</ModalHeader>
+				<ModalBody>
+					<CreateNewTask 
+						newTaskInput={newTaskInput}
+						handleOnCreate={handleOnCreate}
+						handleTaskTitleChange={handleTaskTitleChange}
 					/>
-				</FormControl>
+				</ModalBody>
+				<ModalFooter>
 				{ isCreating  ?
 					<Spinner /> :
-					<Button type={'submit'}>create</Button>
+					<Button 
+						type={'submit'}
+						isDisabled={newTaskInput.isError}
+					>create</Button>
 				}
-			</form>	
-		</Container>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 	</>);
+};
+
+type CreateNewTaskProps = { handleOnCreate: HandleOnCreate, newTaskInput: NewTaskInput, handleTaskTitleChange: HandleTaskTitleChange };
+
+const CreateNewTask = ({handleOnCreate, newTaskInput, handleTaskTitleChange}: CreateNewTaskProps) => (<>
+	<Box>
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				handleOnCreate(newTaskInput.value);
+			} }
+		>
+			<FormControl
+				isRequired
+				isInvalid={newTaskInput.isError}
+			>
+				<InputGroup>
+					<InputLeftAddon children={'title'} />
+					<Input
+						textColor={'white'}
+						type={'text'}
+						value={newTaskInput.value}
+						onChange={handleTaskTitleChange} />
+				</InputGroup>
+				{ newTaskInput.isError ?
+					<FormErrorMessage>a title is required</FormErrorMessage> : <></>
+				}
+			</FormControl>
+		</form>
+	</Box>
+</>)
+
+type HandleOnCreate = (title: TaskTitle) => void;
+
+const useCreateNewTask = (closeModal: () => void) => {
+	const { mutate, isLoading: isCreating } = api.personalTasks.create.useMutation();
+	const { addTasks, resetNewTaskInput, newTaskInput, handleTaskTitleChange, } = usePersonalTasks((s) => ({
+		addTasks: s.add, 
+		handleTaskTitleChange: s.handleTaskTitleChange, 
+		newTaskInput: s.newTaskInput, 
+		resetNewTaskInput: s.resetNewTaskInput
+	}));
+	const handleOnCreate = (title: TaskTitle) => mutate({title}, {onSuccess: (response) => {
+		addTasks(response);
+		resetNewTaskInput();
+		closeModal();
+	}});
+
+	return {
+		handleOnCreate, 
+		newTaskInput,
+		handleTaskTitleChange,
+		isCreating
+	}
 }
+	

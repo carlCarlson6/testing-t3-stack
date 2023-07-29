@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { protectedProcedure } from "../infrastructure/trpc";
-import { PersonalTask } from "./personal-task";
+import { PersonalTask, PersonalTasksResume } from "./personal-task";
 
 export const getPersonalTasksListProcedure = protectedProcedure
     .query(({ctx}) => getPersonalTasksList(ctx.prisma, ctx.session.user.id));
@@ -20,11 +20,3 @@ const mapToAllPersonalTasksList = (maybeTasks: PersonalTask[] | null) => (maybeT
         title: task.title,
         status: task.status,
     }));
-
-export type PersonalTaskResume = {
-    id: string;
-    title: string;
-    status: string;
-}
-
-export type PersonalTasksResume = PersonalTaskResume[];

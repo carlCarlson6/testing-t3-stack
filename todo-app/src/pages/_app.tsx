@@ -5,6 +5,7 @@ import { AppType } from "next/app";
 import Head from "next/head";
 import { api } from "~/ui/api";
 import { Layout } from "~/ui/layout";
+import "~/ui/layout.css"
 
 const MyApp: AppType<{session: Session | null}> = ({
   	Component,

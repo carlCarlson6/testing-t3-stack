@@ -1,38 +1,46 @@
 import { PropsWithChildren, createContext, useContext, useRef } from "react";
 import { createStore, useStore } from "zustand";
-import { PersonalTaskResume, PersonalTasksResume } from "~/server/personal-tasks/get-personal-tasks-list";
-import { TaskTitle } from "~/server/personal-tasks/personal-task";
+import { PersonalTaskId, PersonalTaskResume, PersonalTasksResume, TaskTitle } from "~/server/personal-tasks/personal-task";
 import { InputChanged } from "../input-changed";
 
 interface PersonalTasksProps {
     tasks: PersonalTasksResume;
 }
 
-const DEFAULT_PROPS = {
-    tasks: [],
-    newTaskInput: { value: "", isError: false }
-}
+export type NewTaskInput = { value: TaskTitle, isError: boolean };
+export type HandleTaskTitleChange = (e: InputChanged) => void;
 
 interface PersonalTasksState extends PersonalTasksProps {
-    newTaskInput: {value: TaskTitle, isError: boolean },
     add: (task: PersonalTaskResume) => void,
-    handleTaskTitleChange: (e: InputChanged) => void,
+    newTaskInput: NewTaskInput,
+    handleTaskTitleChange: HandleTaskTitleChange,
     resetNewTaskInput: () => void
+    selectedTask: PersonalTaskId | null,
+    selectTask: (id: PersonalTaskId) => void,
+}
+
+const DEFAULT_PROPS = {
+    tasks: [],
+    newTaskInput: { value: "", isError: false },
+    selectedTask: null,
 }
 
 type PersonalTasksStore = ReturnType<typeof createPersonalTasksStore>
+
+const isInputError = (input: string) => input.trim().length === 0 || !input.replace(/\s/g, '').length
 
 const createPersonalTasksStore = (initProps?: Partial<PersonalTasksProps>) => createStore<PersonalTasksState>()((set) => ({
     ...DEFAULT_PROPS, ...initProps,
     add: (task) => set((state) => ({...state, tasks: [...state.tasks, task]})) ,
     handleTaskTitleChange: (e) => set((state) => ({
         ...state,
-        newTaskInput: { value: e.target.value, isError: e.target.value.trim().length === 0 },
+        newTaskInput: { value: e.target.value, isError: isInputError(e.target.value) },
     })),
     resetNewTaskInput: () => set((state) => ({
         ...state,
         newTaskInput: DEFAULT_PROPS.newTaskInput,
     })),
+    selectTask: (id) => set((state) => ({...state, selectedTask: id})),
 }))
 
 const PersonalTasksContext = createContext<PersonalTasksStore | null>(null);
@@ -42,7 +50,6 @@ type PersonalTasksProviderProps = PropsWithChildren<PersonalTasksProps>
 export const PersonalTasksProvider = ({children, ...props}: PersonalTasksProviderProps) => {
     const storeRef = useRef<PersonalTasksStore>();
     if(!storeRef.current) storeRef.current = createPersonalTasksStore(props);
-
     return (
         <PersonalTasksContext.Provider value={storeRef.current}>
             {children}
@@ -54,7 +61,7 @@ export function usePersonalTasks<T>(
     selector: (state: PersonalTasksState) => T,
     equalityFn?: (left: T, right: T) => boolean
 ): T {
-    const store = useContext(PersonalTasksContext)
-    if (!store) throw new Error('Missing BearContext.Provider in the tree')
-    return useStore(store, selector, equalityFn)
-  }
+    const store = useContext(PersonalTasksContext);
+    if (!store) throw new Error('Missing PersonalTasksContext.Provider in the tree');
+    return useStore(store, selector, equalityFn);
+}

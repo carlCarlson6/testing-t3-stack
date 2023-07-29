@@ -9,7 +9,7 @@ export const enum TaskStatus {
 }
 
 export type PersonalTask = {
-    id: string;
+    id: PersonalTaskId;
     title: TaskTitle;
     status: string;
     notes: Prisma.JsonValue[];
@@ -17,3 +17,13 @@ export type PersonalTask = {
     updates: Prisma.JsonValue[];
     userId: string;
 };
+
+export type PersonalTaskId = string;
+
+export type PersonalTaskResume = {
+    id: string;
+    title: string;
+    status: string;
+}
+
+export type PersonalTasksResume = PersonalTaskResume[];

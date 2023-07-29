@@ -1,6 +1,7 @@
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, Avatar, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, SimpleGrid, Spacer, Text, Avatar, Menu, MenuButton, MenuList, MenuItem, Icon } from "@chakra-ui/react";
 import { useSession , signOut, signIn } from "next-auth/react";
+import { FaDiscord } from "react-icons/fa";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => (<>
     <SimpleGrid>
@@ -50,18 +51,27 @@ const UserAvatar = () => {
                 >
                     <Avatar size={"md"} name={userName} src={avatarImage}/>
                 </MenuButton>
-                <MenuList>{ !session ?
+                <MenuList
+                    backgroundColor={'gray.700'}
+                    borderColor={'gray.500'}
+                >{ !session ?
                         <Button
+                            backgroundColor={'gray.700'}
+                            _hover={{ bg: 'gray.600' }}
                             as={MenuItem}
                             onClick={() => signIn()}
-                            rightIcon={<CheckIcon/>}
+                            rightIcon={<DiscordIcon/>}
+                            textColor={'white'}
                         >
                             sign in
                         </Button> : 
                         <Button
+                            backgroundColor={'gray.700'}
+                            _hover={{ bg: 'gray.600' }}
                             as={MenuItem}
                             onClick={() => signOut()}
                             rightIcon={<CloseIcon/>}
+                            textColor={'white'}
                         >
                             sign out
                         </Button>
@@ -70,3 +80,7 @@ const UserAvatar = () => {
         </Box>
     </>);
 }
+
+export const DiscordIcon = () => (<>
+	<Icon as={FaDiscord} />
+</>);
