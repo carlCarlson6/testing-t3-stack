@@ -6,9 +6,9 @@ import type { PersonalTaskId } from "./personal-task";
 export const getPersonalTaskProcedure = protectedProcedure
     .input(z.object({taskId: z.string().nonempty()}))
     .query(({ctx: {prisma}, input: {taskId}}) => 
-        queryPersonalTasks(prisma, taskId));
+        queryPersonalTask(prisma, taskId));
 
-const queryPersonalTasks = async (db: PrismaClient, taskId: PersonalTaskId) => {
+export const queryPersonalTask = async (db: PrismaClient, taskId: PersonalTaskId) => {
     return await db.personalTask.findUnique({
         where : { 
             id: taskId

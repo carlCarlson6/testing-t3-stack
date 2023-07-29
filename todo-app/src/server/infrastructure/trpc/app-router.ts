@@ -1,5 +1,5 @@
 import { createTRPCRouter } from "~/server/infrastructure/trpc";
-import { personalTasksRouter } from "~/server/personal-tasks/personal-tasks-router";
+import { personalTasksRouter } from "~/server/personal-tasks/router";
 
 export const appRouter = createTRPCRouter({
     personalTasks: personalTasksRouter,

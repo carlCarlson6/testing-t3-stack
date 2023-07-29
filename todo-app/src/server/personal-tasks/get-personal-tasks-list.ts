@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { protectedProcedure } from "../infrastructure/trpc";
-import type { PersonalTask, PersonalTasksResume } from "./personal-task";
+import type { PersonalTasksResume } from "./personal-task";
 
 export const getPersonalTasksListProcedure = protectedProcedure
     .query(({ctx}) => getPersonalTasksList(ctx.prisma, ctx.session.user.id));
@@ -10,11 +10,21 @@ export const getPersonalTasksList = async (db: PrismaClient, userId: string): Pr
     return mapToAllPersonalTasksList(maybeTasks)
 };
 
-const queryAllPersonalTasks = (db: PrismaClient, userId: string) => db.user
-    .findUnique({where: { id: userId }})
-    .personalTasks();
+const queryAllPersonalTasks = (db: PrismaClient, userId: string) => db.personalTask
+    .findMany({
+        where: { userId },
+        select: {
+            id: true,
+            title: true,
+            status: true,
+            createdOn: true
+        },
+        orderBy: {
+            createdOn: 'asc'
+        }
+    });
 
-const mapToAllPersonalTasksList = (maybeTasks: PersonalTask[] | null) => (maybeTasks ?? [])
+const mapToAllPersonalTasksList = (maybeTasks: { id: string; title: string; status: string; createdOn: Date;}[]) => (maybeTasks ?? [])
     .map(task => ({
         id: task.id,
         title: task.title,

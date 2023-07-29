@@ -4,7 +4,7 @@ import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
 import { TaskStatus, type TaskTitle } from "./personal-task";
 
-export const createPersonalTaskProcedute = protectedProcedure
+export const createPersonalTaskProcedure = protectedProcedure
     .input(z.object({title: z.string().nonempty()}))
     .mutation(({ctx, input}) => createPersonalTask({ userId: ctx.session.user.id, taskTitle: input.title }));
 

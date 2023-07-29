@@ -39,7 +39,7 @@ export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose:
 
 interface CreateNewTaskProps { handleOnCreate: HandleOnCreate, newTaskInput: NewTaskInput, handleTaskTitleChange: HandleTaskTitleChange };
 
-const CreateNewTask = ({handleOnCreate, newTaskInput, handleTaskTitleChange}: CreateNewTaskProps) => (<>
+const CreateNewTask = ({newTaskInput, handleTaskTitleChange}: CreateNewTaskProps) => (<>
 	<Box>
 		<form>
 			<FormControl
