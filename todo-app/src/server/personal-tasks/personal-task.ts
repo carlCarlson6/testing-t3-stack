@@ -32,5 +32,4 @@ export interface PersonalTasksResume {
     todoTasks:      PersonalTaskResume[],
     wipTasks:       PersonalTaskResume[],
     doneTasks:      PersonalTaskResume[],
-    archivedTasks:  PersonalTaskResume[],
 }

@@ -4,7 +4,6 @@ import { api } from "../api";
 import { usePersonalTasks } from "./state/use-personal-tasks";
 import type { HandleTaskTitleChange, NewTaskInput } from "./state/personal-tasks-state";
 
-
 export const CreateNewTaskModal = ({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) => {
 	const { handleOnCreate, newTaskInput, handleTaskTitleChange, isCreating } = useCreateNewTask(onClose);
 	return (<>

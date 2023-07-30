@@ -21,7 +21,7 @@ const _Home = () => (<>
 </>)
 
 const personalTasksResumeWhenMissingUser: PersonalTasksResume = {
-	todoTasks: [], wipTasks: [], doneTasks: [], archivedTasks: []
+	todoTasks: [], wipTasks: [], doneTasks: []
 }
 
 export const getServerSideProps: GetServerSideProps<{tasks: PersonalTasksResume}> = async (context) => {

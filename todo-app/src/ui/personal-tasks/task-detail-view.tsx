@@ -9,7 +9,7 @@ export const TaskDetailView = () => {
     return (<>
         {isDataLoading ?
             <Spinner /> :
-            (!task) ?
+            !task ?
                 <></> :
                 <>
                     <SimpleGrid columns={2}>
@@ -26,13 +26,13 @@ export const TaskDetailView = () => {
                         <Box>
                             <Button size={'sm'} onClick={_ => onDeleteTask(task.id)} >{ isDeleting ?
                                 <Spinner /> :
-                                <Text>delete</Text>
+                                <Text>delete it</Text>
                             }</Button>
                         </Box>
                         <Box>
                         <Button size={'sm'} onClick={_ => onArchiveTask(task.id)} >{ isArchiving ?
                                 <Spinner /> :
-                                <Text>archive</Text>
+                                <Text>archive it</Text>
                             }</Button>
                         </Box>
                     </HStack>

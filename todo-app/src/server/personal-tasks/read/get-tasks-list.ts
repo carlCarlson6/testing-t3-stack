@@ -18,42 +18,22 @@ export const getAllTasksList = async ({userId, queryAll}: {
 };
 
 type QueryAllTasks = ReturnType<typeof queryAllTasks>;
-export const queryAllTasks = (db: PrismaClient) => async (userId: string) => {
-    const [personal, archived] = await db.$transaction([
-        queryAllPersonalTasks(db, userId),
-        queryAllArchiveTasks(db, userId),
-    ]);
-    return { personal, archived };
-};
+export const queryAllTasks = (db: PrismaClient) => (userId: string) => 
+    db.personalTask.findMany({
+        where: { userId },
+        select: {
+            id: true,
+            title: true,
+            status: true,
+        },
+        orderBy: {
+            createdOn: 'asc'
+        }
+    });
 
-const queryAllPersonalTasks = (db: PrismaClient, userId: string) => db.personalTask.findMany({
-    where: { userId },
-    select: {
-        id: true,
-        title: true,
-        status: true,
-    },
-    orderBy: {
-        createdOn: 'asc'
-    }
+type Tasks = Awaited<ReturnType<QueryAllTasks>>;
+const mapAllTasksList = (tasks: Tasks): PersonalTasksResume => ({
+    todoTasks:      tasks.filter(t => stringToTaskStatus(t.status) === TaskStatus.TODO),
+    wipTasks:       tasks.filter(t => stringToTaskStatus(t.status) === TaskStatus.WIP),
+    doneTasks:      tasks.filter(t => stringToTaskStatus(t.status) === TaskStatus.DONE),
 });
-
-const queryAllArchiveTasks = (db: PrismaClient, userId: string) => db.archivedPersonalTask.findMany({
-    where: { userId },
-    select: {
-        id: true,
-        title: true,
-        status: true,
-    },
-    orderBy: {
-        createdOn: 'asc'
-    }
-});
-
-const mapAllTasksList = (tasks: Awaited<ReturnType<QueryAllTasks>>): PersonalTasksResume => ({
-    todoTasks:      tasks.personal.filter(t => stringToTaskStatus(t.status) === TaskStatus.TODO),
-    wipTasks:       tasks.personal.filter(t => stringToTaskStatus(t.status) === TaskStatus.WIP),
-    doneTasks:      tasks.personal.filter(t => stringToTaskStatus(t.status) === TaskStatus.DONE),
-    archivedTasks:  tasks.archived,
-});
-

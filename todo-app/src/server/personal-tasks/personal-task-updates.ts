@@ -1,4 +1,4 @@
-import type { TaskArchived } from "./archive/archived-task";
+import type { TaskArchived, TaskUnarchived } from "./archive/archived-task";
 import type { PersonalTaskDeleted } from "./delete/deleted-personal-task";
 import type { StatusUpdated } from "./update-status/status-updated";
 
@@ -7,6 +7,7 @@ export type PersonalTaskUpdates =
     | UnknownUpdate
     | PersonalTaskDeleted
     | TaskArchived
+    | TaskUnarchived
 
 interface UnknownUpdate {
     type: "UNKNOWN_UPDATE"
