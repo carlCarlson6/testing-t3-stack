@@ -10,6 +10,4 @@ export const getPersonalTaskProcedure = protectedProcedure
 
 export type QueryPersonalTask = ReturnType<typeof queryPersonalTask>;
 export const queryPersonalTask = (db: PrismaClient) =>  async (taskId: PersonalTaskId) => 
-    await db.personalTask.findUnique({
-        where: { id: taskId },
-    });
+    await db.personalTask.findUnique({ where: { id: taskId }, });

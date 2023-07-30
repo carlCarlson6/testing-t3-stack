@@ -3,6 +3,7 @@ import { CreateNewTaskModal } from "./create-new-task";
 import type { PersonalTaskResume } from "~/server/personal-tasks/personal-task";
 import { usePersonalTasks } from "./state/use-personal-tasks";
 import { api } from "../api";
+import { DisplayArchiveButton } from "./archive";
 
 export const PersonalTasksList = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,6 +31,10 @@ export const PersonalTasksList = () => {
 
             <Heading size={'sm'} >DONE</Heading>
             <TaskList tasks={tasks.doneTasks}/>
+
+            <Divider marginTop={2} marginBottom={4} />
+
+            <DisplayArchiveButton />
         </Box>
 
         <CreateNewTaskModal isOpen={isOpen} onClose={onClose} />
@@ -50,7 +55,7 @@ const TaskList = ({tasks}: {tasks: PersonalTaskResume[]}) => {
         <List margin={1}>{
             tasks.length === 0 ?
             (
-                <Text fontSize={'xs'} fontStyle={'italic'}>
+                <Text fontSize={'xs'} fontStyle={'italic'} paddingLeft={4}>
                     no tasks
                 </Text>
             ) :

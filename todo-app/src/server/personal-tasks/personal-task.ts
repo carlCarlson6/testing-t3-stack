@@ -29,7 +29,8 @@ export interface PersonalTaskResume {
 }
 
 export interface PersonalTasksResume {
-    todoTasks: PersonalTaskResume[],
-    wipTasks:  PersonalTaskResume[],
-    doneTasks: PersonalTaskResume[],
+    todoTasks:      PersonalTaskResume[],
+    wipTasks:       PersonalTaskResume[],
+    doneTasks:      PersonalTaskResume[],
+    archivedTasks:  PersonalTaskResume[],
 }

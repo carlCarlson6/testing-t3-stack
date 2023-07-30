@@ -5,3 +5,9 @@ export interface TaskArchived {
     taskId: PersonalTaskId;
     on: Date;
 }
+
+export interface TaskUnarchived {
+    type: "UNARCHIVED";
+    taskId: PersonalTaskId;
+    on: Date;
+}

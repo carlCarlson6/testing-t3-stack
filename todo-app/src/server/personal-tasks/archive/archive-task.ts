@@ -6,7 +6,6 @@ import type { PersonalTaskId } from "../personal-task";
 import { type QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
 import { validateInputOperation } from "../delete/delete-task";
 
-
 export const archiveTaskProcedure = protectedProcedure
     .input(z.object({ taskId: z.string().nonempty() }))
     .mutation(({ctx, input}) => archiveTask({
@@ -21,7 +20,7 @@ export const archiveTaskProcedure = protectedProcedure
 const archiveTask = async ({ command, queryPersonalTask, archiveDbOperation }: {
     command: { taskId: PersonalTaskId, userId: string }, 
     queryPersonalTask: QueryPersonalTask,
-    archiveDbOperation: ExecuteDbTaskDelition
+    archiveDbOperation: ExecuteDbTaskDelition,
 }) => {
     const fetchedTask = await queryPersonalTask(command.taskId);
     const task = validateInputOperation({task: fetchedTask, userId: command.userId});

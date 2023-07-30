@@ -1,7 +1,7 @@
-import { protectedProcedure } from "../../infrastructure/trpc";
+import { protectedProcedure } from "../infrastructure/trpc";
 import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
-import { TaskStatus, type TaskTitle } from "../personal-task";
+import { TaskStatus, type TaskTitle } from "./personal-task";
 import type { PersonalTask, PrismaClient } from "@prisma/client";
 
 export const createPersonalTaskProcedure = protectedProcedure
