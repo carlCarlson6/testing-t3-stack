@@ -4,7 +4,7 @@ import { type PersonalTaskId, TaskStatus, stringToTaskStatus } from "../personal
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
 import { type QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
 import { TRPCError } from "@trpc/server";
-import { StatusUpdated } from "./status-updated";
+import type { StatusUpdated } from "./status-updated";
 
 const updatePersonalTaskStatusInput = z.object({
     taskId: z.string().nonempty(),

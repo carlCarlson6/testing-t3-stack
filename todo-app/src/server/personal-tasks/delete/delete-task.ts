@@ -3,7 +3,7 @@ import { protectedProcedure } from "../../infrastructure/trpc";
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
 import { type QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
 import { TRPCError } from "@trpc/server";
-import type { DeletedPersonalTask } from "./deleted-personal-task";
+import type { PersonalTaskDeleted } from "./deleted-personal-task";
 import type { PersonalTaskId } from "../personal-task";
 
 export const deleteTaskProcedure = protectedProcedure
@@ -25,7 +25,7 @@ const deleteTask = async ({command, delitionDbOperation, queryPersonalTask}: {
     const fetchedTask = await queryPersonalTask(command.taskId);
     const task = validateInputOperation({task: fetchedTask, userId: command.userId});
 
-    const update: DeletedPersonalTask = {
+    const update: PersonalTaskDeleted = {
         type: "DELETED_TASK",
         taskId: command.taskId,
         on: new Date(),
@@ -35,7 +35,7 @@ const deleteTask = async ({command, delitionDbOperation, queryPersonalTask}: {
 }
 
 type ExecuteDbTaskDelition = ReturnType<typeof executeDbTaskDelition>;
-const executeDbTaskDelition = (db: PrismaClient) => (task: PersonalTask, update: DeletedPersonalTask) => db.$transaction([
+const executeDbTaskDelition = (db: PrismaClient) => (task: PersonalTask, update: PersonalTaskDeleted) => db.$transaction([
     db.personalTask.delete({ where: { id: task.id } }),
     db.deletedPersonalTask.create({
         data: {

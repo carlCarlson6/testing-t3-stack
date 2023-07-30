@@ -1,9 +1,9 @@
 import { protectedProcedure } from "~/server/infrastructure/trpc";
 import { z } from "zod";
 import type { PersonalTask, Prisma, PrismaClient } from "@prisma/client";
-import { ArchivedTask } from "./archived-task";
-import { PersonalTaskId } from "../personal-task";
-import { QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
+import type { TaskArchived } from "./archived-task";
+import type { PersonalTaskId } from "../personal-task";
+import { type QueryPersonalTask, queryPersonalTask } from "../read/get-personal-task";
 import { validateInputOperation } from "../delete/delete-task";
 
 
@@ -26,7 +26,7 @@ const archiveTask = async ({ command, queryPersonalTask, archiveDbOperation }: {
     const fetchedTask = await queryPersonalTask(command.taskId);
     const task = validateInputOperation({task: fetchedTask, userId: command.userId});
 
-    const update: ArchivedTask = {
+    const update: TaskArchived = {
         type: "ARCHIVED",
         taskId: command.taskId,
         on: new Date(),
@@ -36,7 +36,7 @@ const archiveTask = async ({ command, queryPersonalTask, archiveDbOperation }: {
 }
 
 type ExecuteDbTaskDelition = ReturnType<typeof executeDbTaskArchive>;
-const executeDbTaskArchive = (db: PrismaClient) => (task: PersonalTask, update: ArchivedTask) => db.$transaction([
+const executeDbTaskArchive = (db: PrismaClient) => (task: PersonalTask, update: TaskArchived) => db.$transaction([
     db.personalTask.delete({ where: { id: task.id } }),
     db.archivedPersonalTask.create({
         data: {

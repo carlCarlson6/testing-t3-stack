@@ -1,6 +1,6 @@
-import { PersonalTaskId } from "../personal-task";
+import type { PersonalTaskId } from "../personal-task";
 
-export interface ArchivedTask {
+export interface TaskArchived {
     type: "ARCHIVED";
     taskId: PersonalTaskId;
     on: Date;
