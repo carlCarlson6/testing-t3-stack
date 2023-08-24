@@ -1,0 +1,53 @@
+{
+  "name": "eda",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "postinstall": "prisma generate",
+    "lint": "next lint",
+    "start": "next start",
+    "inngest-local": "npx inngest-cli@latest dev"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@prisma/client": "^5.1.1",
+    "@sniptt/monads": "^0.5.10",
+    "@t3-oss/env-nextjs": "^0.3.1",
+    "@tanstack/react-query": "^4.29.25",
+    "@trpc/client": "^10.34.0",
+    "@trpc/next": "^10.34.0",
+    "@trpc/react-query": "^10.34.0",
+    "@trpc/server": "^10.34.0",
+    "@upstash/qstash": "^0.3.6",
+    "@vercel/kv": "^0.2.2",
+    "framer-motion": "^10.16.1",
+    "inngest": "^2.5.0",
+    "next": "^13.4.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "superjson": "^1.13.1",
+    "ts-pattern": "^5.0.5",
+    "uuid": "^9.0.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.37.0",
+    "@types/node": "^18.16.0",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@types/uuid": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "6.0.0",
+    "@typescript-eslint/parser": "6.0.0",
+    "eslint": "^8.40.0",
+    "eslint-config-next": "^13.4.2",
+    "prisma": "^5.1.1",
+    "typescript": "^5.0.4"
+  },
+  "ct3aMetadata": {
+    "initVersion": "7.18.0"
+  }
+}
