@@ -8,7 +8,7 @@ import type { StatusUpdated } from "./status-updated";
 
 const updatePersonalTaskStatusInput = z.object({
     taskId: z.string().nonempty(),
-    newStatus: z.enum([TaskStatus.TODO, TaskStatus.WIP, TaskStatus.DONE])
+    newStatus: z.enum([TaskStatus.TODO, TaskStatus.WIP, TaskStatus.DONE]),
 });
 
 export const updatePersonalTaskStatusProcedure = protectedProcedure

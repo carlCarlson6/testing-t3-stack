@@ -2,7 +2,7 @@ import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFoo
 import { api } from "./api";
 import { useState } from "react";
 import { CreateOrderInput } from "~/server/orders/create-order";
-import { v4 as uuidV4 } from "uuid";
+import { useOrders } from "~/server/orders/use-orders";
 
 const mockItemsData = [
     {
@@ -23,6 +23,7 @@ export const CreateOrderForm = () => {
     const [ orderItems, setOrderItems ] = useState<CreateOrderInput["items"]>(mockItemsData);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { mutate, isLoading } = api.orders.create.useMutation();
+    const { addOrder } = useOrders([]);
 
     return (<>
         <p>create order </p>
@@ -30,7 +31,7 @@ export const CreateOrderForm = () => {
         <form
             onSubmit={e => {
                 e.preventDefault();
-                mutate({ items: orderItems })
+                addOrder(orderItems);
             }}
         >
             <SimpleGrid column={3}>
